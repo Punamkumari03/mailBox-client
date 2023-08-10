@@ -7,6 +7,7 @@ import {
   } from "react-bootstrap";
   import classes from './SignUp.module.css';
   import { useRef } from "react";
+import { Link } from "react-router-dom/cjs/react-router-dom.min";
 
   const SignUp = () => {
     const emailInpurRef = useRef();
@@ -95,7 +96,7 @@ import {
           </Form>
         </div>
         <div className={classes.h2}>
-          <NavLink>Have an account?Login</NavLink>
+          <Link to='login'>Have an account?Login</Link>
         </div>
       </>
     );
