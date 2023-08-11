@@ -15,8 +15,7 @@ import { useSelector } from "react-redux";
 function App() {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   return (
-    <div>
-    {/* <Navbar/> */}
+    <div className="app">
      
       <Switch>
         <Route exact path="/">

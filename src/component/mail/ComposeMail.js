@@ -1,13 +1,16 @@
-import { Editor } from 'draft-js'
+// import { Editor } from 'draft-js'
 import React from 'react'
 import { useRef } from 'react'
 import { useState } from 'react'
 import { Button, Card, FloatingLabel, Form, FormControl } from 'react-bootstrap'
-import { EditorState } from 'react-draft-wysiwyg'
+// import { EditorState } from 'react-draft-wysiwyg'
 import { useSelector } from 'react-redux'
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import { EditorState } from 'draft-js'
+import { Editor } from 'react-draft-wysiwyg'
 
 const ComposeMail = () => {
+  console.log(EditorState)
     const[editorState, setEditorState]=useState(EditorState.createEmpty())
     const toRef = useRef();
     const subjectRef = useRef();
@@ -20,7 +23,7 @@ const ComposeMail = () => {
     const submitHandler =(e)=>{
         e.preventDefault()
         const receiverEmail = toRef.current.value;
-        const rEmail = receiverEmail.eplace(/[@.]/g, "");
+        const rEmail = receiverEmail.replace(/[@.]/g, "");
 
         const message = {
             to: toRef.current.value,
@@ -90,7 +93,8 @@ res1.then(res =>{
         </FloatingLabel>
         <Card.Body
           style={{
-            backgroundColor: "black",
+            backgroundColor: "rgb(48, 74, 119)",
+            
             color: "white",
             textAlign: "left",
           }}
