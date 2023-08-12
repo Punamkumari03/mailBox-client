@@ -33,7 +33,12 @@ const ComposeMail = () => {
 //sending mail to receiver
 const res = fetch(`https://mailbox-2ea66-default-rtdb.firebaseio.com/${rEmail}/inbox.json`,{
     method:'POST',
-    body: JSON.stringify(message)
+    body: JSON.stringify({
+      from: toRef.current.value,
+      subject: subjectRef.current.value,
+      content: editorState.getCurrentContent().getPlainText(),
+      read: false,
+    })
 })
 res.then(res =>{
     if(res.ok){

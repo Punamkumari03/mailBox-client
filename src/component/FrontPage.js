@@ -1,17 +1,19 @@
-import React from "react";
-import classes from "./Navbar.module.css";
-import { useDispatch, useSelector } from "react-redux";
-import { authActions } from "../store/AuthSlice";
-import { Container, Nav, NavLink } from "react-bootstrap";
+import React from 'react'
+import { useDispatch, useSelector } from 'react-redux';
+import { authActions } from './store/AuthSlice';
+import { Nav, Navbar } from 'react-bootstrap';
+import { NavLink } from 'react-router-dom/cjs/react-router-dom.min';
+import classes from './FrontPage.module.css'
 
-const Navbar = () => {
-  const dispatch = useDispatch();
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-
-  const logouHandler = () => {
-    alert("logout successfully");
-    dispatch(authActions.logout());
-  };
+const FrontPage = () => {
+    const dispatch = useDispatch();
+    const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+    const inbox = useSelector(state => state.inbox)
+  
+    const logouHandler = () => {
+      alert("logout successfully");
+      dispatch(authActions.logout());
+    };
   return (
     <>
        <Navbar bg="white" expand="lg">
@@ -37,7 +39,7 @@ const Navbar = () => {
           )}
           {isAuthenticated && (
             <NavLink to="/inbox" className={classes.style} style={{color:"black"}} >
-              Inbox
+              Inbox{inbox.unreadCount}
             </NavLink>
           )} 
 
@@ -50,7 +52,7 @@ const Navbar = () => {
       </Navbar.Collapse>
     </Navbar>
     </>
-  );
-};
+  )
+}
 
-export default Navbar;
+export default FrontPage
