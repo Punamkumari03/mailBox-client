@@ -1,14 +1,38 @@
 import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
-import { Button, Card, ListGroup, Nav, NavLink } from "react-bootstrap";
+import { Button, Card, ListGroup, Modal, Nav, NavLink } from "react-bootstrap";
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
 
 
 const Inbox = () => {
   const [messages, setMessages] = useState([]);
+  const [selectedEmail,setSelectedEmail ] = useState(null);
   const userEmail = localStorage.getItem("email");
   const sanitizedEmail = userEmail.replace(/[@.]/g, "");
+
+  const setIsReadToTrue =() =>{
+    const key = localStorage.getItem('key which is clicked');
+    const res =fetch(`https://mailbox-2ea66-default-rtdb.firebaseio.com/${sanitizedEmail}/inbox/${key}.json`,{
+      method:'PATCH',
+      body:JSON.stringify({
+        read:true
+      }),
+      headers: {
+        'content-type':'application/json'
+      }
+    })
+    res.then((response)=>{
+      console.log("Todo updated successfully:", response.data)
+    }).catch((err)=>{
+      console.log("Error updating todo",err)
+    })
+  }
+const setKeyToLocalStorage = (key)=>{
+  localStorage.setItem('key which is clicked',key);
+  setIsReadToTrue();
+  setSelectedEmail(messages[key])
+}
 
   useEffect(() => {
    const  res= fetch(`https://mailbox-2ea66-default-rtdb.firebaseio.com/${sanitizedEmail}/inbox.json`)
@@ -17,7 +41,9 @@ const Inbox = () => {
   if(res.ok){
     res.json().then(data =>{
       console.log('inbox data',data)
-      setMessages(Object.values(data))
+      // console.log(Object.values(data))
+      // setMessages(Object.values(data))
+      setMessages(data)
     })
   }else{
     res.json().then(err =>{
@@ -26,7 +52,10 @@ const Inbox = () => {
   }
  })
    }, [sanitizedEmail]);
-
+   const handleClose = () =>{
+    setSelectedEmail(null);
+   }
+// console.log(messages)
   return (
     <div>
       <h3>Inbox-({sanitizedEmail})</h3>
@@ -36,16 +65,45 @@ const Inbox = () => {
         </Link>
       <Card className="text-left">
         <ListGroup variant="flush">
-          {messages.map((message, index) => (
-            <ListGroup.Item key={index}>
-              <div>
-                {`to-${message.to}: subject-${message.subject} - ${message.content}`}
+          {Object.keys(messages).reverse().map((key,index) =>(
+            <ListGroup.Item key={key}>
+              <div onClick={()=> setKeyToLocalStorage(key)}>
+                {!messages[key].read && (
+                  <span   style={{
+                        display: "inline-block",
+                        width: "10px",
+                        height: "10px",
+                        borderRadius: "50%",
+                        backgroundColor: "blue",
+                        marginRight: "5px",
+                      }}></span>
+                )}
+                {`${messages[key].to}: ${messages[key].subject} - ${messages[key].content}`}
               </div>
             </ListGroup.Item>
           ))}
         </ListGroup>
        
       </Card>
+      <Modal show={selectedEmail !== null} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Email Details</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>
+            <strong>To: </strong>
+            {selectedEmail && selectedEmail.to}
+          </p>
+          <p>
+            <strong>Subject: </strong>
+            {selectedEmail && selectedEmail.subject}
+          </p>
+          <p>
+            <strong>Content: </strong>
+            {selectedEmail && selectedEmail.content}
+          </p>
+        </Modal.Body>
+      </Modal>
     </div>
   );
 };
