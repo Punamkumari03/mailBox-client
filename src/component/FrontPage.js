@@ -40,7 +40,7 @@ const FrontPage = () => {
           )}
           {isAuthenticated && (
             <NavLink to="/inbox" className={classes.style} style={{color:"black"}} >
-              Inbox{inbox.unreadCount}
+              Inbox
             </NavLink>
           )} 
           {isAuthenticated && (

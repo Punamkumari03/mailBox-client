@@ -10,6 +10,7 @@ const Inbox = () => {
   const [selectedEmail,setSelectedEmail ] = useState(null);
   const userEmail = localStorage.getItem("email");
   const sanitizedEmail = userEmail.replace(/[@.]/g, "");
+  const [unreadCount,setUnreadCount] = useState(0)
 
 
 
@@ -37,6 +38,13 @@ const setKeyToLocalStorage = (key)=>{
 }
 
   useEffect(() => {
+
+    setInterval(()=>{
+      if(!sanitizedEmail){
+        console.log("email not fount in localStorage")
+        return;
+      }
+
    const  res= fetch(`https://mailbox-2ea66-default-rtdb.firebaseio.com/${sanitizedEmail}/inbox.json`)
 
  res.then(res =>{
@@ -45,6 +53,16 @@ const setKeyToLocalStorage = (key)=>{
       console.log('inbox data',data)
       // console.log(Object.values(data))
       // setMessages(Object.values(data))
+      let unread = 0;
+      for(let i in data){
+        console.log(data[i].read,"insideLoop")
+        if(data[i].read === false){
+          unread += 1;
+        }
+      }
+      if(unread !== unreadCount){
+        setUnreadCount(unread)
+      }
       setMessages(data)
     })
   }else{
@@ -52,7 +70,8 @@ const setKeyToLocalStorage = (key)=>{
       console.log(err)
     })
   }
- })
+})
+ },2000)
    }, [sanitizedEmail]);
    const handleClose = () =>{
     setSelectedEmail(null);
@@ -77,7 +96,9 @@ const setKeyToLocalStorage = (key)=>{
 // console.log(messages)
   return (
     <div>
-      <h3>Inbox-({userEmail})</h3>
+      <h3>Inbox- {`(${userEmail}) There are ${unreadCount} unread messages.`}
+      </h3>
+
       <Link to="/composemail">
           {" "}
           <Button>Compose Email</Button>

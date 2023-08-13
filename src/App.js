@@ -22,7 +22,8 @@ function App() {
       <Switch>
       
         <Route exact path="/">
-          <Login />
+        {!isAuthenticated && <Redirect to='/inbox'/>}
+          {isAuthenticated && <Redirect to='/login'/>}
         </Route>
         <Route path="/signup">
           <SignUp />
