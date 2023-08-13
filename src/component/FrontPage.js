@@ -9,6 +9,7 @@ const FrontPage = () => {
     const dispatch = useDispatch();
     const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
     const inbox = useSelector(state => state.inbox)
+    const userEmail = localStorage.getItem("email")
   
     const logouHandler = () => {
       alert("logout successfully");
@@ -42,7 +43,11 @@ const FrontPage = () => {
               Inbox{inbox.unreadCount}
             </NavLink>
           )} 
-
+          {isAuthenticated && (
+            <NavLink to="/sentbox" className={classes.style} style={{color:"black"}} >
+              Sent Box
+            </NavLink>
+          )} 
           {isAuthenticated && (
             <NavLink to="/login" className={classes.style} style={{color:"red"}} onClick={logouHandler}>
               Logout
@@ -51,6 +56,10 @@ const FrontPage = () => {
         </Nav>
       </Navbar.Collapse>
     </Navbar>
+    {/* <div>  {isAuthenticated && (<><h4>User:</h4>
+      <h4 className={classes.user}>
+        {userEmail}
+      </h4></>)}</div> */}
     </>
   )
 }

@@ -30,11 +30,11 @@ const ComposeMail = () => {
             subject:subjectRef.current.value,
             content:editorState.getCurrentContent().getPlainText(),
         }
-//sending mail to receiver
+//sending data to inbox
 const res = fetch(`https://mailbox-2ea66-default-rtdb.firebaseio.com/${rEmail}/inbox.json`,{
     method:'POST',
     body: JSON.stringify({
-      from: toRef.current.value,
+      from: senderEmail,
       subject: subjectRef.current.value,
       content: editorState.getCurrentContent().getPlainText(),
       read: false,
@@ -55,7 +55,7 @@ res.then(res =>{
     }
 })
  // Sending mail in sentbox of sender
-const res1 = fetch(`https://mailbox-2ea66-default-rtdb.firebaseio.com/${sEmail}/outbox.json`,{
+const res1 = fetch(`https://mailbox-2ea66-default-rtdb.firebaseio.com/${sEmail}/sentbox.json`,{
     method:'POST',
     body: JSON.stringify(message)
 })
