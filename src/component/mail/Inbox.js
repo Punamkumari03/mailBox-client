@@ -11,6 +11,8 @@ const Inbox = () => {
   const userEmail = localStorage.getItem("email");
   const sanitizedEmail = userEmail.replace(/[@.]/g, "");
 
+
+
   const setIsReadToTrue =() =>{
     const key = localStorage.getItem('key which is clicked');
     const res =fetch(`https://mailbox-2ea66-default-rtdb.firebaseio.com/${sanitizedEmail}/inbox/${key}.json`,{
@@ -55,6 +57,18 @@ const setKeyToLocalStorage = (key)=>{
    const handleClose = () =>{
     setSelectedEmail(null);
    }
+   const deleteEmail =(key) =>{
+    fetch(`https://mailbox-2ea66-default-rtdb.firebaseio.com/${sanitizedEmail}/outbox/${key}.json`,{
+      method:'DELETE',
+    }).then((res=>{
+      console.log('email deleted successfully',res.data)
+      const updatedMessages = {...messages}
+      delete updatedMessages[key];
+      setMessages(updatedMessages)
+    })).catch(err =>{
+      console.log('error deleting email :',err)
+    })
+   }
 // console.log(messages)
   return (
     <div>
@@ -79,7 +93,15 @@ const setKeyToLocalStorage = (key)=>{
                       }}></span>
                 )}
                 {`${messages[key].to}: ${messages[key].subject} - ${messages[key].content}`}
+               
               </div>
+              <Button
+                    variant="outline-danger"
+                    style={{ marginLeft: "60rem" }}
+                    onClick={() => deleteEmail(key)}
+                  >
+                    Delete
+                  </Button>{" "}
             </ListGroup.Item>
           ))}
         </ListGroup>
